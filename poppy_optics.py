@@ -122,6 +122,12 @@ DM = poppy.ContinuousDeformableMirror(name='DM', dm_shape=(Nact,Nact), actuator_
 dm_data = fits.getdata('fits-files/roman_hlc_dm1.fits')
 DM.set_surface(dm_data)
 
+# Fraunhofer Continuous DM
+Nact = 48
+FDM = poppy.ContinuousDeformableMirror(name='DM', dm_shape=(Nact,Nact), actuator_spacing=diam/Nact, 
+                                      radius=diam/2, influence_func=str(dm_dir/'proper_inf_func.fits'))
+FDM.set_surface(dm_data)
+
 circ_seg_DM = poppy.CircularSegmentedDeformableMirror(rings=1, segment_radius=dm_diam/2/3 - 0.001*u.m/2, gap=0.001*u.m)
 hex_seg_DM = poppy.HexSegmentedDeformableMirror(rings=1, flattoflat=dm_diam/3 - 0.001*u.m, gap=0.001 * u.m)
 
