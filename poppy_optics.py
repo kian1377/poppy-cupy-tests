@@ -11,8 +11,6 @@ import cupy as cp
 
 import misc
 
-dm_dir = Path('/groups/douglase/kians-data-files/roman-cgi-phasec-data/dm-acts')
-
 npix = 256
 oversample = 4
 wavelength = 500e-9*u.m
@@ -115,18 +113,18 @@ fosys = poppy.FresnelOpticalSystem(pupil_diameter=diam, npix=npix, beam_ratio=1/
 
 # Continuous DM
 Nact = 48
-dm_diam = 46.3*u.mm
 act_spacing = 0.9906*u.mm
+dm_diam = Nact * act_spacing
 DM = poppy.ContinuousDeformableMirror(name='DM', dm_shape=(Nact,Nact), actuator_spacing=act_spacing, 
-                                      radius=dm_diam/2, influence_func=str(dm_dir/'proper_inf_func.fits'))
+                                      radius=dm_diam/2, influence_func=str('fits-files/proper_inf_func.fits'))
 dm_data = fits.getdata('fits-files/roman_hlc_dm1.fits')
 DM.set_surface(dm_data)
 
 # Fraunhofer Continuous DM
 Nact = 48
-FDM = poppy.ContinuousDeformableMirror(name='DM', dm_shape=(Nact,Nact), actuator_spacing=diam/Nact, 
-                                      radius=diam/2, influence_func=str(dm_dir/'proper_inf_func.fits'))
-FDM.set_surface(dm_data)
+DM_fraunhofer = poppy.ContinuousDeformableMirror(name='DM', dm_shape=(Nact,Nact), actuator_spacing=diam/Nact, 
+                                      radius=diam/2, influence_func=str('fits-files/proper_inf_func.fits'))
+DM_fraunhofer.set_surface(dm_data)
 
 circ_seg_DM = poppy.CircularSegmentedDeformableMirror(rings=1, segment_radius=dm_diam/2/3 - 0.001*u.m/2, gap=0.001*u.m)
 hex_seg_DM = poppy.HexSegmentedDeformableMirror(rings=1, flattoflat=dm_diam/3 - 0.001*u.m, gap=0.001 * u.m)
